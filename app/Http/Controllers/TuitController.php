@@ -18,6 +18,7 @@ class TuitController extends Controller
         
         return Inertia::render('Tuits/Index', [
             //
+            'tuits' => Tuit::with('user:id,name')->latest()->get(),
         ]);
         
     }
@@ -63,16 +64,28 @@ class TuitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tuit $tuit)
+    public function update(Request $request, Tuit $tuit): RedirectResponse
     {
-        //
+        $this->authorize('update', $tuit);
+ 
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+ 
+        $tuit->update($validated);
+ 
+        return redirect(route('tuits.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tuit $tuit)
+    public function destroy(Tuit $tuit): RedirectResponse
     {
-        //
+        $this->authorize('delete', $tuit);
+ 
+        $tuit->delete();
+ 
+        return redirect(route('tuits.index'));
     }
 }

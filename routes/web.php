@@ -18,7 +18,7 @@ use Inertia\Inertia;
 */
 
 Route::resource('tuits', TuitController::class)
-    ->only(['index', 'store'])
+    ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
 Route::get('/', function () {
